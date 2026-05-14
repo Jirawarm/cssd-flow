@@ -1,0 +1,32 @@
+services:
+  # ── FastAPI Backend ───────────────────────────────────────────────────────
+  - type: web
+    name: cssd-flow-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        sync: false          # Set manually to your Supabase connection string
+      - key: SECRET_KEY
+        generateValue: true  # Render auto-generates a strong random secret
+      - key: ALLOWED_ORIGINS
+        sync: false          # Set to your Vercel frontend URL e.g. https://cssd-flow.vercel.app
+
+  # ── React Frontend (Static Site) ─────────────────────────────────────────
+  - type: web
+    name: cssd-flow-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    plan: free
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        sync: false          # Set to your Render backend URL e.g. https://cssd-flow-api.onrender.com
