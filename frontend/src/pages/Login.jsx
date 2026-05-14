@@ -103,26 +103,6 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Demo credentials */}
-          <div className="mt-5 pt-5 border-t border-gray-100">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2.5">Demo Credentials</p>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between p-2.5 bg-sky-50 rounded-lg border border-sky-100">
-                <div>
-                  <span className="text-xs font-bold text-sky-700">Admin</span>
-                  <p className="text-xs text-sky-600 mt-0.5 font-mono">admin / admin1234</p>
-                </div>
-                <span className="text-[10px] font-bold px-2 py-1 bg-sky-500 text-white rounded-full">Full Access</span>
-              </div>
-              <div className="flex items-center justify-between p-2.5 bg-gray-50 rounded-lg border border-gray-200">
-                <div>
-                  <span className="text-xs font-bold text-gray-700">Staff</span>
-                  <p className="text-xs text-gray-500 mt-0.5 font-mono">staff / staff1234</p>
-                </div>
-                <span className="text-[10px] font-bold px-2 py-1 bg-gray-400 text-white rounded-full">Standard</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         <p className="text-center text-xs text-gray-400 mt-6">Hospital CSSD Module · v2.2.0</p>
