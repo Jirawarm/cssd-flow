@@ -30,16 +30,16 @@ function buildNavGroups(isAdmin) {
     },
     {
       label: "Reports",
-      items: [
-        { to: "/dispatched", icon: Archive, label: "Dispatched"    },
-        { to: "/history",    icon: History, label: "Audit History" },
-      ],
+      items: [{ to: "/history", icon: History, label: "Audit History" }],
     },
   ];
   if (isAdmin) {
     groups.push({
       label: "Admin",
-      items: [{ to: "/users", icon: Users, label: "Users" }],
+      items: [
+        { to: "/dispatched", icon: Archive, label: "Dispatched Jobs" },
+        { to: "/users",      icon: Users,   label: "Users"           },
+      ],
     });
   }
   return groups;
@@ -214,7 +214,7 @@ export default function App() {
           <Route path="/receive" element={<ProtectedRoute><Layout><ReceiveForm /></Layout></ProtectedRoute>} />
           <Route path="/dispatch" element={<ProtectedRoute><Layout><DispatchValidation /></Layout></ProtectedRoute>} />
           <Route path="/dispatch/:id" element={<ProtectedRoute><Layout><DispatchValidation /></Layout></ProtectedRoute>} />
-          <Route path="/dispatched" element={<ProtectedRoute><Layout><DispatchedHistory /></Layout></ProtectedRoute>} />
+          <Route path="/dispatched" element={<ProtectedRoute requireAdmin><Layout><DispatchedHistory /></Layout></ProtectedRoute>} />
           <Route path="/history" element={<ProtectedRoute><Layout><AuditLog /></Layout></ProtectedRoute>} />
           <Route path="/transaction/:id" element={<ProtectedRoute><Layout><TransactionDetail /></Layout></ProtectedRoute>} />
 

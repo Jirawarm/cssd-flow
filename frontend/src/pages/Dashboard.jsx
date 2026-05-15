@@ -5,6 +5,7 @@ import {
   AlertTriangle, RefreshCw, ArrowRight,
 } from "lucide-react";
 import { api } from "../api";
+import { useAuth } from "../context/AuthContext";
 
 const ACTION_LABEL = {
   RECEIVED: "Received",
@@ -31,6 +32,7 @@ function timeSince(d) {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [stats, setStats] = useState(null);
   const [recentTx, setRecentTx] = useState([]);
   const [recentLogs, setRecentLogs] = useState([]);
@@ -90,8 +92,8 @@ export default function Dashboard() {
           <p className="text-xs text-gray-400 mt-0.5">In Process</p>
         </div>
         <div
-          onClick={() => navigate("/dispatched")}
-          className="bg-white rounded-xl p-4 border-l-4 border-l-gray-300 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => isAdmin && navigate("/dispatched")}
+          className={`bg-white rounded-xl p-4 border-l-4 border-l-gray-300 shadow-sm transition-shadow ${isAdmin ? "cursor-pointer hover:shadow-md" : "cursor-default"}`}
         >
           <p className="text-3xl font-bold text-gray-400">{dispatched}</p>
           <p className="text-xs text-gray-400 mt-0.5">Dispatched</p>
@@ -114,11 +116,11 @@ export default function Dashboard() {
         <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Quick Actions</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: "Receive Items",  desc: "Log inbound set",       path: "/receive",    icon: PackagePlus, color: "bg-sky-500",   border: "border-sky-200",   text: "text-sky-600"  },
-            { label: "Dispatch",       desc: "Send out & verify qty", path: "/dispatch",   icon: Send,        color: "bg-emerald-500", border: "border-emerald-200", text: "text-emerald-600", count: inProcess },
-            { label: "Dispatched",     desc: "View completed jobs",   path: "/dispatched", icon: Archive,     color: "bg-gray-500",  border: "border-gray-200",  text: "text-gray-500" },
-            { label: "Audit History",  desc: "Full activity log",     path: "/history",    icon: History,     color: "bg-indigo-500", border: "border-indigo-200", text: "text-indigo-600" },
-          ].map((card) => (
+            { label: "Receive Items",  desc: "Log inbound set",       path: "/receive",    icon: PackagePlus, color: "bg-sky-500",     border: "border-sky-200",     text: "text-sky-600",     adminOnly: false },
+            { label: "Dispatch",       desc: "Send out & verify qty", path: "/dispatch",   icon: Send,        color: "bg-emerald-500", border: "border-emerald-200", text: "text-emerald-600", adminOnly: false, count: inProcess },
+            { label: "Dispatched",     desc: "View completed jobs",   path: "/dispatched", icon: Archive,     color: "bg-gray-500",   border: "border-gray-200",   text: "text-gray-500",    adminOnly: true  },
+            { label: "Audit History",  desc: "Full activity log",     path: "/history",    icon: History,     color: "bg-indigo-500", border: "border-indigo-200", text: "text-indigo-600",  adminOnly: false },
+          ].filter((c) => !c.adminOnly || isAdmin).map((card) => (
             <button
               key={card.path}
               onClick={() => navigate(card.path)}
