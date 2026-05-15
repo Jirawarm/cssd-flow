@@ -75,11 +75,13 @@ export default function DispatchValidation() {
 
   const parsedQty = parseInt(outQty) || 0;
   const hasDiscrepancy = selected != null && parsedQty > 0 && parsedQty < selected.inbound_qty;
+  const overQty = selected != null && parsedQty > 0 && parsedQty > selected.inbound_qty;
   const discrepancyCount = selected ? selected.inbound_qty - parsedQty : 0;
 
   const validate = () => {
     const e = {};
     if (!outQty || parsedQty < 1) e.qty = "Outbound quantity must be at least 1";
+    if (overQty) e.qty = `Cannot exceed received quantity (${selected.inbound_qty})`;
     if (!outImage) e.image = "Outbound photo is mandatory";
     if (hasDiscrepancy && !discNote.trim()) e.note = "Discrepancy note required when quantity is less than received";
     return e;
@@ -242,7 +244,18 @@ export default function DispatchValidation() {
                 </div>
               </div>
             )}
-            {!hasDiscrepancy && parsedQty > 0 && parsedQty >= selected.inbound_qty && (
+            {overQty && (
+              <div className="flex items-start gap-2 mt-2.5 p-3 bg-red-50 border border-red-200 rounded-xl">
+                <AlertTriangle size={16} className="text-red-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-red-700 text-sm font-bold">Exceeds Received Quantity</p>
+                  <p className="text-red-500 text-xs mt-0.5">
+                    Cannot dispatch {parsedQty} — only {selected.inbound_qty} were received
+                  </p>
+                </div>
+              </div>
+            )}
+            {!hasDiscrepancy && !overQty && parsedQty > 0 && parsedQty === selected.inbound_qty && (
               <div className="flex items-center gap-2 mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl">
                 <CheckCircle size={15} className="text-emerald-500" />
                 <p className="text-emerald-600 text-sm font-semibold">Full set — quantities match</p>
@@ -282,7 +295,7 @@ export default function DispatchValidation() {
 
           {/* Submit — sticky on mobile */}
           <div className="sticky bottom-4 lg:static">
-            <button onClick={handleDispatch} disabled={submitting}
+            <button onClick={handleDispatch} disabled={submitting || overQty}
               className={`w-full py-4 font-bold rounded-xl transition-colors disabled:opacity-60 text-lg min-h-[56px] shadow-lg lg:shadow-none ${
                 hasDiscrepancy ? "bg-red-500 hover:bg-red-600 text-white" : "bg-emerald-500 hover:bg-emerald-600 text-white"
               }`}>

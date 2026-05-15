@@ -280,6 +280,8 @@ def dispatch_transaction(
         raise HTTPException(404, "Transaction not found")
     if tx.status == "DISPATCHED":
         raise HTTPException(400, "Transaction already dispatched")
+    if payload.outbound_qty > tx.inbound_qty:
+        raise HTTPException(400, f"Outbound quantity ({payload.outbound_qty}) cannot exceed inbound quantity ({tx.inbound_qty})")
     if payload.outbound_qty < tx.inbound_qty and not payload.discrepancy_note:
         raise HTTPException(400, "Discrepancy note required when outbound qty < inbound qty")
 
