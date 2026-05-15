@@ -46,7 +46,8 @@ export default function DispatchValidation() {
     const load = async () => {
       setLoading(true);
       try {
-        const items = await api.getTransactions({ status: "READY" });
+        const all = await api.getTransactions();
+        const items = all.filter((i) => i.status !== "DISPATCHED");
         setReadyItems(items);
         if (id) {
           const found = items.find((i) => i.id === parseInt(id));
@@ -54,7 +55,7 @@ export default function DispatchValidation() {
           else {
             try {
               const d = await api.getTransaction(parseInt(id));
-              if (d.status === "READY") { setSelected(d); loadLogs(d.id); }
+              if (d.status !== "DISPATCHED") { setSelected(d); loadLogs(d.id); }
             } catch {}
           }
         }
@@ -122,14 +123,14 @@ export default function DispatchValidation() {
     <div className="max-w-2xl space-y-5">
       <div>
         <h1 className="text-xl md:text-2xl font-bold text-gray-900">Dispatch</h1>
-        <p className="text-sm text-gray-400 mt-0.5">Select a READY item to begin validation</p>
+        <p className="text-sm text-gray-400 mt-0.5">Select an item to dispatch</p>
       </div>
       {readyItems.length === 0 ? (
         <div className="text-center py-16">
           <Package size={48} className="mx-auto text-gray-200 mb-3" />
-          <p className="text-gray-400 font-semibold">No items ready for dispatch</p>
-          <button onClick={() => navigate("/ready")} className="mt-4 px-5 py-3 bg-emerald-500 text-white rounded-xl text-sm font-semibold min-h-[48px]">
-            Go to Ready Queue
+          <p className="text-gray-400 font-semibold">No items in process</p>
+          <button onClick={() => navigate("/receive")} className="mt-4 px-5 py-3 bg-sky-500 text-white rounded-xl text-sm font-semibold min-h-[48px]">
+            Receive New Items
           </button>
         </div>
       ) : (

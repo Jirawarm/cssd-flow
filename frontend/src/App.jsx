@@ -1,17 +1,14 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard, PackagePlus, Waves, Zap, CheckCircle,
-  Send, History, Menu, X, ChevronRight, Users, LogOut, Shield, Archive,
+  LayoutDashboard, PackagePlus, Send, History,
+  Menu, X, ChevronRight, Users, LogOut, Shield, Archive,
 } from "lucide-react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import ReceiveForm from "./pages/ReceiveForm";
-import WashingQueue from "./pages/WashingQueue";
-import SterilizingQueue from "./pages/SterilizingQueue";
-import ReadyQueue from "./pages/ReadyQueue";
 import DispatchValidation from "./pages/DispatchValidation";
 import AuditLog from "./pages/AuditLog";
 import TransactionDetail from "./pages/TransactionDetail";
@@ -27,11 +24,8 @@ function buildNavGroups(isAdmin) {
     {
       label: "Workflow",
       items: [
-        { to: "/receive",     icon: PackagePlus, label: "Receive"     },
-        { to: "/washing",     icon: Waves,       label: "Washing"     },
-        { to: "/sterilizing", icon: Zap,         label: "Sterilizing" },
-        { to: "/ready",       icon: CheckCircle, label: "Ready"       },
-        { to: "/dispatch",    icon: Send,        label: "Dispatch"    },
+        { to: "/receive",  icon: PackagePlus, label: "Receive"  },
+        { to: "/dispatch", icon: Send,        label: "Dispatch" },
       ],
     },
     {
@@ -218,9 +212,6 @@ export default function App() {
           {/* Protected */}
           <Route path="/" element={<ProtectedRoute><Layout><Dashboard /></Layout></ProtectedRoute>} />
           <Route path="/receive" element={<ProtectedRoute><Layout><ReceiveForm /></Layout></ProtectedRoute>} />
-          <Route path="/washing" element={<ProtectedRoute><Layout><WashingQueue /></Layout></ProtectedRoute>} />
-          <Route path="/sterilizing" element={<ProtectedRoute><Layout><SterilizingQueue /></Layout></ProtectedRoute>} />
-          <Route path="/ready" element={<ProtectedRoute><Layout><ReadyQueue /></Layout></ProtectedRoute>} />
           <Route path="/dispatch" element={<ProtectedRoute><Layout><DispatchValidation /></Layout></ProtectedRoute>} />
           <Route path="/dispatch/:id" element={<ProtectedRoute><Layout><DispatchValidation /></Layout></ProtectedRoute>} />
           <Route path="/dispatched" element={<ProtectedRoute><Layout><DispatchedHistory /></Layout></ProtectedRoute>} />
